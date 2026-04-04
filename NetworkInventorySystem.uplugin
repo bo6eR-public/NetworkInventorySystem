@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "NetworkInventorySystem",
+	"Description": "Plugin provides the multiplayer inventory system",
+	"Category": "Inventory",
+	"CreatedBy": "bo6eR",
+	"CreatedByURL": "bo6eR.public@gmail.com",
+	"DocsURL": "https://localhost:2026/example.com",
+	"MarketplaceURL": "https://localhost:2026/example.com",
+	"SupportURL": "bo6eR.public@gmail.com",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "NetworkInventorySystem",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
