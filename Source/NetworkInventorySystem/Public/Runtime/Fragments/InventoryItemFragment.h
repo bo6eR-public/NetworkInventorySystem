@@ -32,7 +32,7 @@ public:
 	
 #pragma region Setters
     UFUNCTION(BlueprintCallable, BlueprintSetter)
-    FORCEINLINE void SetCount(int32 NewCount) { Count = FMath::Max(0, NewCount); }
+    void SetCount(int32 NewCount);
 #pragma endregion
 	
 #pragma region Getters

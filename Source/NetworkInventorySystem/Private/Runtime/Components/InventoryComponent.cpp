@@ -3,6 +3,7 @@
 
 #include "Components/InventoryComponent.h"
 #include "Fragments/InventoryItemFragment.h"
+#include "Net/Core/PushModel/PushModel.h"
 #include "System/InventoryUtilityTypes.h"
 #include "Engine/ActorChannel.h"
 #include "Engine/AssetManager.h"
@@ -86,6 +87,7 @@ void UInventoryComponent::Server_AddItemAsync_Implementation(const FInventoryDat
 			}
 		}
 	}));
+	MARK_PROPERTY_DIRTY_FROM_NAME(ThisClass, InventoryArray, this);
 }
 
 void UInventoryComponent::Server_DeleteItemAsync_Implementation(const FInventoryDataInfo& InventoryDataInfo)
@@ -116,6 +118,7 @@ void UInventoryComponent::Server_DeleteItemAsync_Implementation(const FInventory
 	{
 		OnInventoryEmpty.Broadcast();
 	}
+	MARK_PROPERTY_DIRTY_FROM_NAME(ThisClass, InventoryArray, this);
 }
 
 bool UInventoryComponent::Contains(const UInventoryItemFragment* EntryFragment) const
@@ -277,6 +280,7 @@ void UInventoryComponent::Server_ClearInventory_Implementation()
 	}
 	InventoryArray.Get().Empty();
 	OnInventoryEmpty.Broadcast();
+	MARK_PROPERTY_DIRTY_FROM_NAME(ThisClass, InventoryArray, this);
 }
 
 void UInventoryComponent::PrintInventoryItems(const TArray<FInventoryItem>& Items, float TimeToDisplay, FLinearColor Color)
@@ -299,7 +303,10 @@ void UInventoryComponent::GetLifetimeReplicatedProps(TArray<class FLifetimePrope
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
-	DOREPLIFETIME_CONDITION(ThisClass, InventoryArray, COND_OwnerOnly);
+	FDoRepLifetimeParams OutLifetimeProp;
+	OutLifetimeProp.bIsPushBased = true;
+	OutLifetimeProp.Condition = COND_OwnerOnly;
+	DOREPLIFETIME_WITH_PARAMS_FAST(ThisClass, InventoryArray, OutLifetimeProp);
 }
 
 bool UInventoryComponent::ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags)

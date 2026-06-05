@@ -3,6 +3,7 @@
 
 #include "Fragments/InventoryItemFragment.h"
 #include "System/Settings/InventoryGameSettings.h"
+#include "Net/Core/PushModel/PushModel.h"
 #include "Net/UnrealNetwork.h"
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(InventoryItemFragment)
@@ -26,9 +27,16 @@ void UInventoryItemFragment::GetLifetimeReplicatedProps(TArray<class FLifetimePr
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
-	DOREPLIFETIME(ThisClass, Mesh);
-	DOREPLIFETIME(ThisClass, Texture);
-	DOREPLIFETIME_CONDITION(ThisClass, Count, COND_OwnerOnly);
+	FDoRepLifetimeParams OutLifetimeProp;
+	OutLifetimeProp.bIsPushBased = true;
+	
+	DOREPLIFETIME_WITH_PARAMS_FAST(ThisClass, Mesh, OutLifetimeProp);
+	DOREPLIFETIME_WITH_PARAMS_FAST(ThisClass, Texture, OutLifetimeProp);
+	
+	FDoRepLifetimeParams OutLifetimePropWithCondition;
+	OutLifetimePropWithCondition.bIsPushBased = true;
+	OutLifetimePropWithCondition.Condition = COND_OwnerOnly;
+	DOREPLIFETIME_WITH_PARAMS_FAST(ThisClass, Count, OutLifetimePropWithCondition);
 }
 
 bool UInventoryItemFragment::IsCategorized() const
@@ -38,6 +46,12 @@ bool UInventoryItemFragment::IsCategorized() const
 		return InventorySettings->IsCategorized();
 	}
 	return false;
+}
+
+void UInventoryItemFragment::SetCount(int32 NewCount)
+{
+	Count = FMath::Max(0, NewCount);
+	MARK_PROPERTY_DIRTY_FROM_NAME(ThisClass, Count, this);
 }
 
 FPrimaryAssetId UInventoryItemFragment::GetPrimaryAssetId() const
