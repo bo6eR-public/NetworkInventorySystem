@@ -5,13 +5,13 @@
 #include "InventoryUtilityTypes.generated.h"
 
 USTRUCT(BlueprintType, Blueprintable)
-struct FInventoryDataInfo
+struct FInventoryInstance
 {
 	GENERATED_BODY()
 	
 public:
-	explicit FInventoryDataInfo() = default;
-	explicit FInventoryDataInfo(const FPrimaryAssetId& InPrimaryAssetId, UObject* InOwner = nullptr, int32 InQuantity = 1);
+	explicit FInventoryInstance() = default;
+	explicit FInventoryInstance(const FPrimaryAssetId& InPrimaryAssetId, UObject* InOwner = nullptr, int32 InQuantity = 1);
 
 	template<class T>
 	inline T* GetWeakOwner() const { return Cast<T>(Owner); }

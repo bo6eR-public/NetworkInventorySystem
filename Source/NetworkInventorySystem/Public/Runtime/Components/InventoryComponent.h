@@ -16,7 +16,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPostReplicatedChangeDelegate, const
 
 //~ Forwarding declaration
 struct FStreamableHandle;
-struct FInventoryDataInfo;
+struct FInventoryInstance;
 class UInventoryItemFragment;
 enum class EInventorySortOrder : uint8;
 enum class EMatchType : uint8;
@@ -42,10 +42,10 @@ public:
 #pragma endregion
 	
 	UFUNCTION(BlueprintCallable, Server, Reliable, DisplayName="Add Item Async", Category=Functionality)
-	void Server_AddItemAsync(const FInventoryDataInfo& InventoryDataInfo, bool bForceLoad = false);
+	void Server_AddItemAsync(const FInventoryInstance& InventoryDataInfo, bool bForceLoad = false);
 	
 	UFUNCTION(BlueprintCallable, Server, Reliable, DisplayName="Delete Item Async", Category=Functionality)
-	void Server_DeleteItemAsync(const FInventoryDataInfo& InventoryDataInfo);
+	void Server_DeleteItemAsync(const FInventoryInstance& InventoryDataInfo);
 	
 	UFUNCTION(BlueprintCallable, Server, Reliable, DisplayName="Unload All Items And Clear Inventory", Category=Functionality)
 	void Server_ClearInventory();

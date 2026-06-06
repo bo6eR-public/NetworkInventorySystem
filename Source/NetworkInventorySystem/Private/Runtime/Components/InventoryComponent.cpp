@@ -43,7 +43,7 @@ FInventoryItem UInventoryComponent::GetItemCopyAt(const int32 Index)
 	return InventoryArray[Index];
 }
 
-void UInventoryComponent::Server_AddItemAsync_Implementation(const FInventoryDataInfo& InventoryDataInfo, bool bForceLoad)
+void UInventoryComponent::Server_AddItemAsync_Implementation(const FInventoryInstance& InventoryDataInfo, bool bForceLoad)
 {
 	UAssetManager* AssetManager = UAssetManager::GetIfInitialized();
 	check(AssetManager);
@@ -90,7 +90,7 @@ void UInventoryComponent::Server_AddItemAsync_Implementation(const FInventoryDat
 	MARK_PROPERTY_DIRTY_FROM_NAME(ThisClass, InventoryArray, this);
 }
 
-void UInventoryComponent::Server_DeleteItemAsync_Implementation(const FInventoryDataInfo& InventoryDataInfo)
+void UInventoryComponent::Server_DeleteItemAsync_Implementation(const FInventoryInstance& InventoryDataInfo)
 {
 	UAssetManager* AssetManager = &UAssetManager::Get();
 	check(AssetManager);

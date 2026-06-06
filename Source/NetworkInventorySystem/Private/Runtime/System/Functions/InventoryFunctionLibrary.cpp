@@ -73,7 +73,7 @@ void UInventoryFunctionLibrary::Trade(UWorld* Context, const TArray<FInventoryIt
 		{
 			for (const auto& Item : MoveItems)
 			{
-				FInventoryDataInfo ItemData
+				FInventoryInstance ItemData
 				(
 					Item.ItemFragment->GetPrimaryAssetId(), 
 					Context,

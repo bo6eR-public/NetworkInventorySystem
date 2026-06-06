@@ -5,7 +5,7 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(InventoryUtilityTypes)
 
-FInventoryDataInfo::FInventoryDataInfo(const FPrimaryAssetId& InPrimaryAssetId, UObject* InOwner, int32 InQuantity) : PrimaryAssetId(InPrimaryAssetId), Quantity(InQuantity)
+FInventoryInstance::FInventoryInstance(const FPrimaryAssetId& InPrimaryAssetId, UObject* InOwner, int32 InQuantity) : PrimaryAssetId(InPrimaryAssetId), Quantity(InQuantity)
 {
 	ensureMsgf(GEngine, TEXT("GEngine is not initialized!"));
 	Owner = InOwner != nullptr ? InOwner : GEngine->GetCurrentPlayWorld();

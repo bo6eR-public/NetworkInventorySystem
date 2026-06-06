@@ -21,7 +21,7 @@ public class NetworkInventorySystem : ModuleRules
 		PublicDependencyModuleNames.AddRange(
 			new [] 
 			{
-				"Core", "NetCore", "DeveloperSettings", "GameplayTags"
+				"Core", "NetCore", "DeveloperSettings", "GameplayTags", "FunctionalTesting"
 			}
 		);
 		
