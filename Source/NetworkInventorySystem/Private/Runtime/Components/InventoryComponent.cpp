@@ -56,7 +56,11 @@ void UInventoryComponent::Server_AddItemAsync_Implementation(const FInventoryIns
 	};
 	if (const FInventoryItem* FoundItem = InventoryArray.FindByPredicate(FoundationCondition))
 	{
-		FoundItem->Update(EUpdateCommand::INCREASE, InventoryDataInfo.Quantity);
+		const bool bResult = FoundItem->Update(EUpdateCommand::INCREASE, InventoryDataInfo.Quantity);
+		if (!bResult)
+		{
+			return;
+		}
 	}
 	
 	TArray<FName> Bundles;
@@ -128,6 +132,21 @@ bool UInventoryComponent::Contains(const UInventoryItemFragment* EntryFragment) 
 		if (Entry.IsValid())
 		{
 			if (Entry.ItemFragment == EntryFragment)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool UInventoryComponent::ContainsById(const FPrimaryAssetId& PrimaryAssetId) const
+{
+	for (const FInventoryItem& Entry : InventoryArray.Get())
+	{
+		if (Entry.IsValid())
+		{
+			if (Entry.ItemFragment->GetPrimaryAssetId() == PrimaryAssetId)
 			{
 				return true;
 			}

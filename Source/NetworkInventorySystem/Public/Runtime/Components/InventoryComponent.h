@@ -54,6 +54,9 @@ public:
 	bool Contains(const UInventoryItemFragment* EntryFragment) const;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category=Functionality)
+	bool ContainsById(const FPrimaryAssetId& PrimaryAssetId) const;
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category=Functionality)
 	const FInventoryItem& FindBy(const UInventoryItemFragment* EntryFragment) const;
 	
 	UFUNCTION(BlueprintCallable, CustomThunk, BlueprintPure=false, DisplayName="Sort Items", Category=Functionality)
@@ -72,11 +75,11 @@ public:
 	static void PrintInventoryItems(const TArray<FInventoryItem>& Items, float TimeToDisplay, FLinearColor Color);
 #pragma endregion
 	
-protected:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual bool ReplicateSubobjects(class UActorChannel* Channel, class FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 	virtual void ReadyForReplication() override;
 	
+protected:
 	UFUNCTION(BlueprintNativeEvent)
 	void OnRep_InventoryArray();
 	
