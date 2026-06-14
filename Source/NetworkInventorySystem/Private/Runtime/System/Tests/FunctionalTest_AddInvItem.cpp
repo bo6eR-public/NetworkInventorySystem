@@ -10,9 +10,14 @@
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(FunctionalTest_AddInvItem)
 
+#define FOREACH_CHARACTER(World)														\
+	for (TActorIterator<ACharacter> It = TActorIterator<ACharacter>(World); It; ++It)	\
+		if (ACharacter* Character = *It)											\
+
 AFunctionalTest_AddInvItem::AFunctionalTest_AddInvItem()
 {
-	// Does something...
+	bAlwaysRelevant = true;
+	bReplicates = true;
 }
 
 void AFunctionalTest_AddInvItem::PrepareTest()
@@ -35,41 +40,35 @@ void AFunctionalTest_AddInvItem::StartTest()
 	{
 		const UWorld* World = GetWorld();
 		if (!World) return;
-        	
-        for (TActorIterator<ACharacter> It = TActorIterator<ACharacter>(World); It; ++It)
-        {
-        	if (ACharacter* Character = *It)
-        	{
-		        if (UInventoryComponent* InventoryComponent = Character->FindComponentByClass<UInventoryComponent>())
-        		{
-        			InventoryComponent->OnInventoryUpdate.AddUniqueDynamic(this, &ThisClass::OnInventoryUpdated);
+		
+		FOREACH_CHARACTER(World)
+		{
+			if (UInventoryComponent* InventoryComponent = Character->FindComponentByClass<UInventoryComponent>())
+			{
+				InventoryComponent->OnInventoryUpdate.AddUniqueDynamic(this, &ThisClass::Client_OnInventoryUpdated);
         			
-        			const FInventoryInstance InventoryInstance(Item, Character);
-        			InventoryComponent->Server_AddItemAsync(InventoryInstance, true);
-        		}
-        	}
-        }
+				const FInventoryInstance InventoryInstance(Item, Character);
+				InventoryComponent->Server_AddItemAsync(InventoryInstance, true);
+			}
+		}
 	}
 }
 
-void AFunctionalTest_AddInvItem::OnInventoryUpdated()
+void AFunctionalTest_AddInvItem::Client_OnInventoryUpdated_Implementation()
 {
 	const UWorld* World = GetWorld();
 	if (!World) return;
-        	
-	for (TActorIterator<ACharacter> It = TActorIterator<ACharacter>(World); It; ++It)
+	
+	FOREACH_CHARACTER(World)
 	{
-		if (const ACharacter* Character = *It)
+		const UInventoryComponent* InventoryComponent = Character->FindComponentByClass<UInventoryComponent>();
+		if (InventoryComponent && InventoryComponent->ContainsById(Item))
 		{
-			const UInventoryComponent* InventoryComponent = Character->FindComponentByClass<UInventoryComponent>();
-			if (InventoryComponent && InventoryComponent->ContainsById(Item))
-			{
-				FinishTest(EFunctionalTestResult::Succeeded, TEXT("Success result for FunctionalTest_AddInvItem"));
-			}
-			else if (InventoryComponent && !InventoryComponent->ContainsById(Item))
-			{
-				FinishTest(EFunctionalTestResult::Failed, TEXT("Failed result for FunctionalTest_AddInvItem"));
-			}
+			FinishTest(EFunctionalTestResult::Succeeded, TEXT("Success result for FunctionalTest_AddInvItem"));
+		}
+		else
+		{
+			FinishTest(EFunctionalTestResult::Failed, TEXT("Failed result for FunctionalTest_AddInvItem"));
 		}
 	}
 }

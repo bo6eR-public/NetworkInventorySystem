@@ -27,8 +27,8 @@ protected:
 #endif
 	
 private:
-	UFUNCTION()
-	void OnInventoryUpdated();
+	UFUNCTION(Client, Unreliable)
+	void Client_OnInventoryUpdated();
 	
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Item Data", meta=(AllowPrivateAccess=true))
